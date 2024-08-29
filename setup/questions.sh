@@ -81,6 +81,7 @@ address, so we're suggesting $DEFAULT_PRIMARY_HOSTNAME.
 	if [ -z "$PRIMARY_HOSTNAME" ]; then
 		# user hit ESC/cancel
 		echo "Continue forward.."
+		PRIMARY_HOSTNAME=$DEFAULT_PRIMARY_HOSTNAME
 		# exit
 	fi
 fi
