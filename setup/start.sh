@@ -104,7 +104,6 @@ PRIVATE_IPV6=$PRIVATE_IPV6
 MTA_STS_MODE=${DEFAULT_MTA_STS_MODE:-enforce}
 EOF
 
-echo 'made it to here'
 
 # Start service configuration.
 source setup/system.sh
