@@ -78,7 +78,6 @@ fi
 if ! id -u "$STORAGE_USER" >/dev/null 2>&1; then
 	useradd -m "$STORAGE_USER"
 fi
-echo 'made it to here'
 
 if [ ! -d "$STORAGE_ROOT" ]; then
 	mkdir -p "$STORAGE_ROOT"
@@ -89,6 +88,7 @@ if [ ! -f "$STORAGE_ROOT/mailinabox.version" ]; then
 	setup/migrate.py --current > "$STORAGE_ROOT/mailinabox.version"
 	chown "$STORAGE_USER:$STORAGE_USER" "$STORAGE_ROOT/mailinabox.version"
 fi
+echo 'made it to here'
 
 # Save the global options in /etc/mailinabox.conf so that standalone
 # tools know where to look for data. The default MTA_STS_MODE setting
