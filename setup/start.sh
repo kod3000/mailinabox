@@ -65,7 +65,7 @@ source setup/questions.sh
 # 	source setup/network-checks.sh
 # fi
 # fi
-
+echo 'made it to here'
 # Create the STORAGE_USER and STORAGE_ROOT directory if they don't already exist.
 #
 # Set the directory and all of its parent directories' permissions to world
