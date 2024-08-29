@@ -64,7 +64,7 @@ if [ -z "${DEFAULT_PRIMARY_HOSTNAME:-}" ]; then
 if [ -z "${SKIP_NETWORK_CHECKS:-}" ]; then
 	source setup/network-checks.sh
 fi
-# fi
+fi
 echo 'made it to here'
 
 # Create the STORAGE_USER and STORAGE_ROOT directory if they don't already exist.
