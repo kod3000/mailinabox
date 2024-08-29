@@ -78,10 +78,10 @@ address, so we're suggesting $DEFAULT_PRIMARY_HOSTNAME.
 		"$DEFAULT_PRIMARY_HOSTNAME" \
 		PRIMARY_HOSTNAME
 
-	if [ -z "$PRIMARY_HOSTNAME" ]; then
+	# if [ -z "$PRIMARY_HOSTNAME" ]; then
 		# user hit ESC/cancel
 		# exit
-	fi
+	# fi
 fi
 
 # If the machine is behind a NAT, inside a VM, etc., it may not know
