@@ -88,7 +88,6 @@ if [ ! -f "$STORAGE_ROOT/mailinabox.version" ]; then
 	setup/migrate.py --current > "$STORAGE_ROOT/mailinabox.version"
 	chown "$STORAGE_USER:$STORAGE_USER" "$STORAGE_ROOT/mailinabox.version"
 fi
-echo 'made it to here'
 
 # Save the global options in /etc/mailinabox.conf so that standalone
 # tools know where to look for data. The default MTA_STS_MODE setting
@@ -104,6 +103,8 @@ PRIVATE_IP=$PRIVATE_IP
 PRIVATE_IPV6=$PRIVATE_IPV6
 MTA_STS_MODE=${DEFAULT_MTA_STS_MODE:-enforce}
 EOF
+
+echo 'made it to here'
 
 # Start service configuration.
 source setup/system.sh
