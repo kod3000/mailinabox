@@ -65,7 +65,6 @@ if [ -z "${SKIP_NETWORK_CHECKS:-}" ]; then
 	source setup/network-checks.sh
 fi
 fi
-echo 'made it to here'
 
 # Create the STORAGE_USER and STORAGE_ROOT directory if they don't already exist.
 #
@@ -79,6 +78,8 @@ echo 'made it to here'
 if ! id -u "$STORAGE_USER" >/dev/null 2>&1; then
 	useradd -m "$STORAGE_USER"
 fi
+echo 'made it to here'
+
 if [ ! -d "$STORAGE_ROOT" ]; then
 	mkdir -p "$STORAGE_ROOT"
 fi
