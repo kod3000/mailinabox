@@ -80,7 +80,7 @@ address, so we're suggesting $DEFAULT_PRIMARY_HOSTNAME.
 
 	if [ -z "$PRIMARY_HOSTNAME" ]; then
 		# user hit ESC/cancel
-		exit
+		# exit
 	fi
 fi
 
