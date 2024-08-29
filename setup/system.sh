@@ -12,8 +12,9 @@ source setup/functions.sh # load our functions
 #
 # First set the hostname in the configuration file, then activate the setting
 
-echo "$PRIMARY_HOSTNAME" > /etc/hostname
-sudo hostname "$PRIMARY_HOSTNAME"
+# echo "$PRIMARY_HOSTNAME" > /etc/hostname
+# sudo hostname "$PRIMARY_HOSTNAME"
+PRIMARY_HOSTNAME='box.staff.ylift.com'
 
 # ### Fix permissions
 
