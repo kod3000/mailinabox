@@ -25,68 +25,67 @@ if [ -z "${NONINTERACTIVE:-}" ]; then
 		\n\nNOTE: You should only install this on a brand new Ubuntu installation 100% dedicated to Mail-in-a-Box. Mail-in-a-Box will, for example, remove apache2."
 fi
 
-PRIMARY_HOSTNAME="box.staff.ylift.com"
 
 # The box needs a name.
-# if [ -z "${PRIMARY_HOSTNAME:-}" ]; then
-# 	if [ -z "${DEFAULT_PRIMARY_HOSTNAME:-}" ]; then
-# 		# We recommend to use box.example.com as this hosts name. The
-# 		# domain the user possibly wants to use is example.com then.
-# 		# We strip the string "box." from the hostname to get the mail
-# 		# domain. If the hostname differs, nothing happens here.
-# 		DEFAULT_DOMAIN_GUESS=$(get_default_hostname | sed -e 's/^box\.//')
+if [ -z "${PRIMARY_HOSTNAME:-}" ]; then
+	if [ -z "${DEFAULT_PRIMARY_HOSTNAME:-}" ]; then
+		# We recommend to use box.example.com as this hosts name. The
+		# domain the user possibly wants to use is example.com then.
+		# We strip the string "box." from the hostname to get the mail
+		# domain. If the hostname differs, nothing happens here.
+		DEFAULT_DOMAIN_GUESS=$(get_default_hostname | sed -e 's/^box\.//')
 
-# 		# This is the first run. Ask the user for his email address so we can
-# 		# provide the best default for the box's hostname.
-# 		input_box "Your Email Address" \
-# "What email address are you setting this box up to manage?
-# \n\nThe part after the @-sign must be a domain name or subdomain
-# that you control. You can add other email addresses to this
-# box later (including email addresses on other domain names
-# or subdomains you control).
-# \n\nWe've guessed an email address. Backspace it and type in what
-# you really want.
-# \n\nEmail Address:" \
-# 			"me@$DEFAULT_DOMAIN_GUESS" \
-# 			EMAIL_ADDR
+		# This is the first run. Ask the user for his email address so we can
+		# provide the best default for the box's hostname.
+		input_box "Your Email Address" \
+"What email address are you setting this box up to manage?
+\n\nThe part after the @-sign must be a domain name or subdomain
+that you control. You can add other email addresses to this
+box later (including email addresses on other domain names
+or subdomains you control).
+\n\nWe've guessed an email address. Backspace it and type in what
+you really want.
+\n\nEmail Address:" \
+			"me@$DEFAULT_DOMAIN_GUESS" \
+			EMAIL_ADDR
 
-# 		if [ -z "$EMAIL_ADDR" ]; then
-# 			# user hit ESC/cancel
-# 			exit
-# 		fi
-# 		while ! python3 management/mailconfig.py validate-email "$EMAIL_ADDR"
-# 		do
-# 			input_box "Your Email Address" \
-# 				"That's not a valid email address.\n\nWhat email address are you setting this box up to manage?" \
-# 				"$EMAIL_ADDR" \
-# 				EMAIL_ADDR
-# 			if [ -z "$EMAIL_ADDR" ]; then
-# 				# user hit ESC/cancel
-# 				exit
-# 			fi
-# 		done
+		if [ -z "$EMAIL_ADDR" ]; then
+			# user hit ESC/cancel
+			exit
+		fi
+		while ! python3 management/mailconfig.py validate-email "$EMAIL_ADDR"
+		do
+			input_box "Your Email Address" \
+				"That's not a valid email address.\n\nWhat email address are you setting this box up to manage?" \
+				"$EMAIL_ADDR" \
+				EMAIL_ADDR
+			if [ -z "$EMAIL_ADDR" ]; then
+				# user hit ESC/cancel
+				exit
+			fi
+		done
 
-# 		# Take the part after the @-sign as the user's domain name, and add
-# 		# 'box.' to the beginning to create a default hostname for this machine.
-# 		DEFAULT_PRIMARY_HOSTNAME=box.$(echo "$EMAIL_ADDR" | sed 's/.*@//')
-# 	fi
+		# Take the part after the @-sign as the user's domain name, and add
+		# 'box.' to the beginning to create a default hostname for this machine.
+		DEFAULT_PRIMARY_HOSTNAME=box.$(echo "$EMAIL_ADDR" | sed 's/.*@//')
+	fi
 
-# 	input_box "Hostname" \
-# "This box needs a name, called a 'hostname'. The name will form a part of the box's web address.
-# \n\nWe recommend that the name be a subdomain of the domain in your email
-# address, so we're suggesting $DEFAULT_PRIMARY_HOSTNAME.
-# \n\nYou can change it, but we recommend you don't.
-# \n\nHostname:" \
-# 		"$DEFAULT_PRIMARY_HOSTNAME" \
-# 		PRIMARY_HOSTNAME
+	input_box "Hostname" \
+"This box needs a name, called a 'hostname'. The name will form a part of the box's web address.
+\n\nWe recommend that the name be a subdomain of the domain in your email
+address, so we're suggesting $DEFAULT_PRIMARY_HOSTNAME.
+\n\nYou can change it, but we recommend you don't.
+\n\nHostname:" \
+		"$DEFAULT_PRIMARY_HOSTNAME" \
+		PRIMARY_HOSTNAME
 
-# 	if [ -z "$PRIMARY_HOSTNAME" ]; then
-# 		# user hit ESC/cancel
-# 		echo "Continue forward.."
-# 		PRIMARY_HOSTNAME=$DEFAULT_PRIMARY_HOSTNAME
-# 		# exit
-# 	fi
-# fi
+	if [ -z "$PRIMARY_HOSTNAME" ]; then
+		# user hit ESC/cancel
+		echo "Continue forward.."
+		PRIMARY_HOSTNAME=$DEFAULT_PRIMARY_HOSTNAME
+		# exit
+	fi
+fi
 
 # If the machine is behind a NAT, inside a VM, etc., it may not know
 # its IP address on the public network / the Internet. Ask the Internet
