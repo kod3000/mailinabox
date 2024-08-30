@@ -62,7 +62,7 @@ done
 mkdir -p /var/lib/munin-node/plugin-state/
 
 # Install and configure Supervisor.
-apt_install supervisor
+# apt_install supervisor
 
 # Create Supervisor configuration for Munin
 cat > /etc/supervisor/conf.d/munin.conf <<EOF
