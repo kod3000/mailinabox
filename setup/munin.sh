@@ -67,7 +67,7 @@ mkdir -p /var/lib/munin-node/plugin-state/
 # Create Supervisor configuration for Munin
 cat > /etc/supervisor/conf.d/munin.conf <<EOF
 [program:munin-cron]
-command=/usr/sbin/munin-cron
+command=/usr/bin/munin-cron
 user=munin
 autostart=true
 autorestart=true
@@ -75,7 +75,7 @@ stderr_logfile=/var/log/munin/munin-cron.err.log
 stdout_logfile=/var/log/munin/munin-cron.out.log
 
 [program:munin-node]
-command=/usr/bin/munin-node
+command=/usr/sbin/munin-node
 user=munin
 autostart=true
 autorestart=true
