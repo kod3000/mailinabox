@@ -290,7 +290,7 @@ if [ ! -f /etc/postgrey/whitelist_clients ] || find /etc/postgrey/whitelist_clie
         # before moving it into place
         if [ "\$(file -b --mime-type /tmp/postgrey_whitelist_clients)" == "text/plain" ]; then
             mv /tmp/postgrey_whitelist_clients /etc/postgrey/whitelist_clients
-            service postgrey restart
+            # service postgrey restart
 	else
             rm /tmp/postgrey_whitelist_clients
         fi
