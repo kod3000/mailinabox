@@ -237,7 +237,7 @@ dd if=/dev/random of=/dev/urandom bs=1 count=32 2> /dev/null
 # is really any good on virtualized systems, we'll also seed from Ubuntu's
 # pollinate servers:
 
-sudo kill -TERM $(pgrep haveged)
+# sudo kill -TERM $(pgrep haveged)
 echo "Next Pollinate..."
 haveged -w 1024
 
@@ -386,6 +386,10 @@ cp -f conf/fail2ban/filter.d/* /etc/fail2ban/filter.d/
 # Roundcube for the first time. This causes fail2ban to fail to start. Later
 # scripts will ensure the files exist and then fail2ban is given another
 # restart at the very end of setup.
-restart_service fail2ban
+
+# restart_service fail2ban
+sudo kill -TERM $(pgrep fail2ban)
+sudo /usr/bin/fail2ban-server -b
+
 
 systemctl enable fail2ban
