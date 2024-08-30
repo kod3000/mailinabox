@@ -45,7 +45,6 @@ echo "Installing Postfix (SMTP server)..."
 apt-get install -y postfix postfix-sqlite postfix-pcre postgrey ca-certificates
 
 # ### Basic Settings
-echo "Settings..."
 
 
 # Set some basic settings...
@@ -306,6 +305,7 @@ tools/editconf.py /etc/postfix/main.cf \
 	message_size_limit=134217728
 
 # Allow the two SMTP ports in the firewall.
+echo "firewall..."
 
 ufw_allow smtp
 ufw_allow smtps
