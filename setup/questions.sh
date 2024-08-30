@@ -213,6 +213,6 @@ fi
 if [ -f /usr/bin/git ] && [ -d .git ]; then
 	echo "Mail-in-a-Box Version: $(git describe --always)"
 fi
-	echo "Version: 0.0.3"
+	echo "Version: 0.0.4"
 
 echo
