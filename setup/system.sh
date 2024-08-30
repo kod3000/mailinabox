@@ -365,7 +365,7 @@ echo "Now resolv..."
 # Restart the DNS services.
 echo "Now Restart DNS..."
 
-sudo kill -TERM $(pgrep named)
+# sudo kill -TERM $(pgrep named)
 sudo /usr/sbin/named -c /etc/bind/named.conf
 # systemctl restart systemd-resolved
 
