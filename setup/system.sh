@@ -248,6 +248,7 @@ fi
 # ### Package maintenance
 #
 # Allow apt to install system updates automatically every day.
+echo "Now Periodic..."
 
 cat > /etc/apt/apt.conf.d/02periodic <<EOF;
 APT::Periodic::MaxAge "7";
