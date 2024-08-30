@@ -120,4 +120,4 @@ $minute 3 * * *	root	(cd $PWD && management/daily_tasks.sh)
 EOF
 
 # Start the management server.
-restart_service mailinabox
+# restart_service mailinabox
