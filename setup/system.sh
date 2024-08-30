@@ -256,6 +256,7 @@ APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
 APT::Periodic::Verbose "0";
 EOF
+echo "Now Firewall..."
 
 # ### Firewall
 
