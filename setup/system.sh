@@ -248,7 +248,7 @@ fi
 # ### Package maintenance
 #
 # Allow apt to install system updates automatically every day.
-echo "Now Periodic..."
+
 
 cat > /etc/apt/apt.conf.d/02periodic <<EOF;
 APT::Periodic::MaxAge "7";
@@ -256,7 +256,6 @@ APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
 APT::Periodic::Verbose "0";
 EOF
-echo "Now Firewall..."
 
 # ### Firewall
 
@@ -285,6 +284,7 @@ if [ -z "${DISABLE_FIREWALL:-}" ]; then
 
 	ufw --force enable;
 fi #NODOC
+echo "Now DNS..."
 
 # ### Local DNS Service
 
@@ -339,10 +339,13 @@ if ! grep -q "listen-on " /etc/bind/named.conf.options; then
 	# Add a listen-on directive if it doesn't exist inside the options block.
 	sed -i "s/^}/\n\tlisten-on { 127.0.0.1; };\n}/" /etc/bind/named.conf.options
 fi
+echo "Now recursion..."
+
 if ! grep -q "max-recursion-queries " /etc/bind/named.conf.options; then
 	# Add a max-recursion-queries directive if it doesn't exist inside the options block.
 	sed -i "s/^}/\n\tmax-recursion-queries 100;\n}/" /etc/bind/named.conf.options
 fi
+echo "Now resolv..."
 
 # First we'll disable systemd-resolved's management of resolv.conf and its stub server.
 # Breaking the symlink to /run/systemd/resolve/stub-resolv.conf means
@@ -355,6 +358,7 @@ tools/editconf.py /etc/systemd/resolved.conf DNSStubListener=no
 echo "nameserver 127.0.0.1" > /etc/resolv.conf
 
 # Restart the DNS services.
+echo "Now Restart DNS..."
 
 restart_service bind9
 systemctl restart systemd-resolved
