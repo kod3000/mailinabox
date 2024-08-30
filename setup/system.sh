@@ -229,7 +229,7 @@ fi
 # less likely to stall for very long.
 
 echo "Initializing system random number generator..."
-rngd -r /dev/random -o /dev/urandom
+dd if=/dev/random of=/dev/urandom bs=1 count=32 2> /dev/null
 
 # This is supposedly sufficient. But because we're not sure if hardware entropy
 # is really any good on virtualized systems, we'll also seed from Ubuntu's
