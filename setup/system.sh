@@ -388,8 +388,8 @@ cp -f conf/fail2ban/filter.d/* /etc/fail2ban/filter.d/
 # restart at the very end of setup.
 
 # restart_service fail2ban
-sudo kill -TERM $(pgrep fail2ban)
-sudo /usr/bin/fail2ban-server -b
-
+# sudo kill -TERM $(pgrep fail2ban)
+# sudo /usr/bin/fail2ban-server -b
+sudo fail2ban-server restart
 
 systemctl enable fail2ban
