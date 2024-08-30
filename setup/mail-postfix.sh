@@ -259,13 +259,12 @@ tools/editconf.py /etc/postfix/main.cf \
 # $STORAGE_ROOT won't have spaces to simplify things.
 tools/editconf.py /etc/default/postgrey \
 	POSTGREY_OPTS=\""--inet=127.0.0.1:10023 --delay=180 --dbdir=$STORAGE_ROOT/mail/postgrey/db"\"
-echo "STORAGE_ROOT..."
 
 
 # If the $STORAGE_ROOT/mail/postgrey is empty, copy the postgrey database over from the old location
 if [ ! -d "$STORAGE_ROOT/mail/postgrey/db" ]; then
 	# Stop the service
-	service postgrey stop
+	# service postgrey stop
 	# Ensure the new paths for postgrey db exists
 	mkdir -p "$STORAGE_ROOT/mail/postgrey/db"
 	# Move over database files
