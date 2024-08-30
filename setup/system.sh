@@ -171,7 +171,8 @@ if [ -z "${NONINTERACTIVE:-}" ]; then
 		# Mail-in-a-Box setup, run the interactive timezone configuration
 		# tool.
 		dpkg-reconfigure tzdata
-		restart_service rsyslog
+		sudo kill -TERM $(pgrep rsyslogd)
+		sudo /usr/sbin/rsyslogd
 	fi
 else
 	# This is a non-interactive setup so we can't ask the user.
@@ -179,7 +180,8 @@ else
 	if [ ! -f /etc/timezone ]; then
 		echo "Setting timezone to UTC."
 		echo "Etc/UTC" > /etc/timezone
-		restart_service rsyslog
+		sudo kill -TERM $(pgrep rsyslogd)
+		sudo /usr/sbin/rsyslogd
 	fi
 fi
 
