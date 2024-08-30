@@ -27,13 +27,13 @@ inst_dir=/usr/local/lib/mailinabox
 mkdir -p $inst_dir
 venv=$inst_dir/env
 if [ ! -d $venv ]; then
-	# A bug specific to Ubuntu 22.04 and Python 3.10 requires
-	# forcing a virtualenv directory layout option (see #2335
-	# and https://github.com/pypa/virtualenv/pull/2415). In
-	# our issue, reportedly installing python3-distutils didn't
-	# fix the problem.)
-	export DEB_PYTHON_INSTALL_LAYOUT='deb'
-	hide_output virtualenv -ppython3 $venv
+    # A bug specific to Ubuntu 22.04 and Python 3.10 requires
+    # forcing a virtualenv directory layout option (see #2335
+    # and https://github.com/pypa/virtualenv/pull/2415). In
+    # our issue, reportedly installing python3-distutils didn't
+    # fix the problem.)
+    export DEB_PYTHON_INSTALL_LAYOUT='deb'
+    hide_output virtualenv -ppython3 $venv
 fi
 
 # Upgrade pip because the Ubuntu-packaged version is out of date.
@@ -43,20 +43,19 @@ hide_output $venv/bin/pip install --upgrade pip
 # The first line is the packages that Josh maintains himself!
 # NOTE: email_validator is repeated in setup/questions.sh, so please keep the versions synced.
 hide_output $venv/bin/pip install --upgrade \
-	rtyaml "email_validator>=1.0.0" "exclusiveprocess" \
-	flask dnspython python-dateutil expiringdict gunicorn \
-	qrcode[pil] pyotp \
-	"idna>=2.0.0" "cryptography==37.0.2" psutil postfix-mta-sts-resolver \
-	b2sdk boto3
+    rtyaml "email_validator>=1.0.0" "exclusiveprocess" \
+    flask dnspython python-dateutil expiringdict gunicorn \
+    qrcode[pil] pyotp \
+    "idna>=2.0.0" "cryptography==37.0.2" psutil postfix-mta-sts-resolver \
+    b2sdk boto3
 
 # CONFIGURATION
 
 # Create a backup directory and a random key for encrypting backups.
 mkdir -p "$STORAGE_ROOT/backup"
 if [ ! -f "$STORAGE_ROOT/backup/secret_key.txt" ]; then
-	(umask 077; openssl rand -base64 2048 > "$STORAGE_ROOT/backup/secret_key.txt")
+    (umask 077; openssl rand -base64 2048 > "$STORAGE_ROOT/backup/secret_key.txt")
 fi
-
 
 # Download jQuery and Bootstrap local files
 
@@ -82,32 +81,25 @@ unzip -q /tmp/bootstrap.zip -d $assets_dir
 mv $assets_dir/bootstrap-$bootstrap_version-dist $assets_dir/bootstrap
 rm -f /tmp/bootstrap.zip
 
-# Create an init script to start the management daemon and keep it
-# running after a reboot.
-# Set a long timeout since some commands take a while to run, matching
-# the timeout we set for PHP (fastcgi_read_timeout in the nginx confs).
-# Note: Authentication currently breaks with more than 1 gunicorn worker.
-cat > $inst_dir/start <<EOF;
-#!/bin/bash
-# Set character encoding flags to ensure that any non-ASCII don't cause problems.
-export LANGUAGE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_TYPE=en_US.UTF-8
+# Install and configure Supervisor.
+apt_install supervisor
 
-mkdir -p /var/lib/mailinabox
-tr -cd '[:xdigit:]' < /dev/urandom | head -c 32 > /var/lib/mailinabox/api.key
-chmod 640 /var/lib/mailinabox/api.key
-
-source $venv/bin/activate
-export PYTHONPATH=$PWD/management
-exec gunicorn -b localhost:10222 -w 1 --timeout 630 wsgi:app
+# Create Supervisor configuration for Mail-in-a-Box
+cat > /etc/supervisor/conf.d/mailinabox.conf <<EOF
+[program:mailinabox]
+command=/usr/local/lib/mailinabox/env/bin/gunicorn -b localhost:10222 -w 1 --timeout 630 wsgi:app
+directory=/usr/local/lib/mailinabox
+user=www-data
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/mailinabox/mailinabox.err.log
+stdout_logfile=/var/log/mailinabox/mailinabox.out.log
 EOF
-chmod +x $inst_dir/start
-cp --remove-destination conf/mailinabox.service /lib/systemd/system/mailinabox.service # target was previously a symlink so remove it first
-hide_output systemctl link -f /lib/systemd/system/mailinabox.service
-# hide_output systemctl daemon-reload
-# hide_output systemctl enable mailinabox.service
+
+# Reload Supervisor configuration and start services
+supervisorctl reread
+supervisorctl update
+supervisorctl start mailinabox
 
 # Perform nightly tasks at 3am in system time: take a backup, run
 # status checks and email the administrator any changes.
@@ -120,4 +112,4 @@ $minute 3 * * *	root	(cd $PWD && management/daily_tasks.sh)
 EOF
 
 # Start the management server.
-# restart_service mailinabox
+echo "Mail-in-a-Box management server started."

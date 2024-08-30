@@ -40,45 +40,57 @@ chown munin /var/log/munin/munin-cgi-graph.log
 # ensure munin-node knows the name of this machine
 # and reduce logging level to warning
 tools/editconf.py /etc/munin/munin-node.conf -s \
-	host_name="$PRIMARY_HOSTNAME" \
-	log_level=1
+    host_name="$PRIMARY_HOSTNAME" \
+    log_level=1
 
 # Update the activated plugins through munin's autoconfiguration.
 munin-node-configure --shell --remove-also 2>/dev/null | sh || /bin/true
+echo "node Munin (system monitoring)..."
 
-# Deactivate monitoring of NTP peers. Not sure why anyone would want to monitor a NTP peer. The addresses seem to change
-# (which is taken care of my munin-node-configure, but only when we re-run it.)
+# Deactivate monitoring of NTP peers.
 find /etc/munin/plugins/ -lname /usr/share/munin/plugins/ntp_ -print0 | xargs -0 /bin/rm -f
 
-# Deactivate monitoring of network interfaces that are not up. Otherwise we can get a lot of empty charts.
+# Deactivate monitoring of network interfaces that are not up.
 for f in $(find /etc/munin/plugins/ \( -lname /usr/share/munin/plugins/if_ -o -lname /usr/share/munin/plugins/if_err_ -o -lname /usr/share/munin/plugins/bonding_err_ \)); do
-	IF=$(echo "$f" | sed s/.*_//);
-	if ! grep -qFx up "/sys/class/net/$IF/operstate" 2>/dev/null; then
-		rm "$f";
-	fi;
+    IF=$(echo "$f" | sed s/.*_//);
+    if ! grep -qFx up "/sys/class/net/$IF/operstate" 2>/dev/null; then
+        rm "$f";
+    fi;
 done
 
 # Create a 'state' directory. Not sure why we need to do this manually.
 mkdir -p /var/lib/munin-node/plugin-state/
 
-# Create a systemd service for munin.
-ln -sf "$PWD/management/munin_start.sh" /usr/local/lib/mailinabox/munin_start.sh
-chmod 0744 /usr/local/lib/mailinabox/munin_start.sh
-cp --remove-destination conf/munin.service /lib/systemd/system/munin.service # target was previously a symlink so remove first
-hide_output systemctl link -f /lib/systemd/system/munin.service
-# hide_output systemctl daemon-reload
-# hide_output systemctl unmask munin.service
-# hide_output systemctl enable munin.service
+# Install and configure Supervisor.
+apt_install supervisor
 
-# Restart services.
-# restart_service munin
-# restart_service munin-node
+# Create Supervisor configuration for Munin
+cat > /etc/supervisor/conf.d/munin.conf <<EOF
+[program:munin-cron]
+command=/usr/sbin/munin-cron
+user=munin
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/munin/munin-cron.err.log
+stdout_logfile=/var/log/munin/munin-cron.out.log
 
-# generate initial statistics so the directory isn't empty
-# (We get "Pango-WARNING **: error opening config file '/root/.config/pango/pangorc': Permission denied"
-# if we don't explicitly set the HOME directory when sudo'ing.)
-# We check to see if munin-cron is already running, if it is, there is no need to run it simultaneously
-# generating an error.
+[program:munin-node]
+command=/usr/bin/munin-node
+user=munin
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/munin/munin-node.err.log
+stdout_logfile=/var/log/munin/munin-node.out.log
+EOF
+
+# Reload Supervisor configuration and start services
+supervisorctl reread
+supervisorctl update
+supervisorctl start munin-cron
+supervisorctl start munin-node
+
+# Generate initial statistics so the directory isn't empty
+# Check to see if munin-cron is already running
 if [ ! -f /var/run/munin/munin-update.lock ]; then
-	sudo -H -u munin munin-cron
+    sudo -H -u munin munin-cron
 fi
