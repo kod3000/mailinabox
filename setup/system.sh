@@ -238,7 +238,7 @@ echo "Next Pollinate..."
 pollinate  -q -r
 
 # Between these two, we really ought to be all set.
-
+echo "Now RSA..."
 # We need an ssh key to store backups via rsync, if it doesn't exist create one
 if [ ! -f /root/.ssh/id_rsa_miab ]; then
 	echo 'Creating SSH key for backup…'
