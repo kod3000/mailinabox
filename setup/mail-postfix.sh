@@ -311,7 +311,9 @@ ufw_allow smtps
 ufw_allow submission
 
 # Restart services
-echo "Restart services..."
+echo "Restart postfix..."
 
 restart_service postfix
-restart_service postgrey
+echo "Restart postgrey..."
+
+service postgrey restart
