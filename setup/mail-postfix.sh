@@ -45,6 +45,8 @@ echo "Installing Postfix (SMTP server)..."
 apt-get install -y postfix postfix-sqlite postfix-pcre postgrey ca-certificates
 
 # ### Basic Settings
+echo "Settings..."
+
 
 # Set some basic settings...
 #
@@ -257,6 +259,7 @@ tools/editconf.py /etc/postfix/main.cf \
 # $STORAGE_ROOT won't have spaces to simplify things.
 tools/editconf.py /etc/default/postgrey \
 	POSTGREY_OPTS=\""--inet=127.0.0.1:10023 --delay=180 --dbdir=$STORAGE_ROOT/mail/postgrey/db"\"
+echo "STORAGE_ROOT..."
 
 
 # If the $STORAGE_ROOT/mail/postgrey is empty, copy the postgrey database over from the old location
