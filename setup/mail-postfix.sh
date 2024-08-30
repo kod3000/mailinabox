@@ -305,13 +305,13 @@ tools/editconf.py /etc/postfix/main.cf \
 	message_size_limit=134217728
 
 # Allow the two SMTP ports in the firewall.
-echo "firewall..."
 
 ufw_allow smtp
 ufw_allow smtps
 ufw_allow submission
 
 # Restart services
+echo "Restart services..."
 
 restart_service postfix
 restart_service postgrey
