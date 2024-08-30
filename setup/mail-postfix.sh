@@ -316,5 +316,5 @@ echo "Restart postfix..."
 restart_service postfix
 echo "Restart postgrey..."
 
-service postgrey restart
+# service postgrey restart
 echo "Done postgrey..."
