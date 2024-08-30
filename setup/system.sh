@@ -234,7 +234,7 @@ rngd -r /dev/random -o /dev/urandom
 # This is supposedly sufficient. But because we're not sure if hardware entropy
 # is really any good on virtualized systems, we'll also seed from Ubuntu's
 # pollinate servers:
-
+echo "Next Pollinate..."
 pollinate  -q -r
 
 # Between these two, we really ought to be all set.
