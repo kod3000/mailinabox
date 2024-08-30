@@ -235,7 +235,7 @@ dd if=/dev/random of=/dev/urandom bs=1 count=32 2> /dev/null
 # is really any good on virtualized systems, we'll also seed from Ubuntu's
 # pollinate servers:
 echo "Next Pollinate..."
-pollinate  -q -r
+haveged -w 1024
 
 # Between these two, we really ought to be all set.
 echo "Now RSA..."
